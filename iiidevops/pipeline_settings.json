@@ -1,6 +1,6 @@
 {
   "name": "ASP.NET Core",
-  "description": "ASP.NET Core 3.1 <a class='el-link el-link--primary' href='https://github.com/iiidevops-templates/asp-dotnet-core-example/blob/master/README.md' target='_blank'>MVC web 範本說明</a><hr /><ul><li><strong>v2.0</strong>更新CI自動化腳本</li></ul>",
+  "description": "ASP.NET Core 3.1 <a class='el-link el-link--primary' href='https://github.com/iiidevops-v2-templates/ci-asp-dotnet-core-example/blob/master/README.md' target='_blank'>MVC web 範本說明</a><hr /><ul><li><strong>v2.0</strong>更新CI自動化腳本</li></ul>",
   "arguments": [
   ]
 }
