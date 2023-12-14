@@ -1,6 +1,6 @@
 {
   "name": "ASP.NET Core",
-  "description": "ASP.NET Core 3.1 <a class='el-link el-link--primary' href='https://github.com/iiidevops-v2-templates/ci-asp-dotnet-core-example/blob/master/README.md' target='_blank'>MVC web 範本說明</a><hr /><ul><li><strong>v2.0</strong>更新CI自動化腳本</li></ul>",
+  "description": "ASP.NET Core 6.0 <a class='el-link el-link--primary' href='https://github.com/iiidevops-v2-templates/ci-asp-dotnet-core-example/blob/master/README.md' target='_blank'>MVC web 範本說明</a><hr /><ul><li><p><strong>v2.0</strong>\u66f4\u65b0CI\u81ea\u52d5\u5316\u8173\u672c</p></li><li><p>\u8abf\u6574sln\u4e0d\u9700\u653e\u5728\u6839\u76ee\u9304\uff0c\u5c07\u5c08\u6848sourcecode\u5168\u6578\u653e\u5728app\u4e2d</p></li><li><p>\u5c07sln\u6b63\u78ba\u4f4d\u7f6e\u66f4\u65b0\u81f3iiidevops/sonarqube/SonarScan\u4e2d</p></li><li><p><strong>ASP.NET 8.0</strong> Container\u4e2d\uff0cWeb\u6838\u5fc3\u57e0\u5f9e80\u8b8a\u66f4\u70ba<strong>8080</strong>\uff0c\u4f7f\u7528\u6b64\u7248\u672c\u52d9\u5fc5\u7559\u610f\u5404\u8a2d\u5b9a\u9700\u9032\u884c\u8abf\u6574</p></li></ul>",
   "arguments": [
   ]
 }
