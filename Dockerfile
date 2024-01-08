@@ -5,7 +5,7 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /src/app
 COPY ["app/ASP-MVC-example.csproj", "app/"]
 RUN dotnet restore "app/ASP-MVC-example.csproj"
 COPY app /src/app
