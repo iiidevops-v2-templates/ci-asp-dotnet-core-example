@@ -3,7 +3,6 @@ cd app && echo 'Install scan package' && apt-get update && apt install -y locale
 echo 'Add dotnet tools into PATH' && export PATH="$PATH:/root/.dotnet/tools"
 
 # install open-jdk-17
-
  apt-get update
  apt-get install -y openjdk-17-jdk
 
@@ -15,4 +14,4 @@ dotnet-sonarscanner\
     begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
     /d:sonar.host.url=$SONAR_HOST_URL\
     /d:sonar.exclusions=../iiidevops/**,../docs/**\
-	&& dotnet build ../ASP-MVC-example.sln && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+	&& dotnet build ../app/ASP-MVC-example.sln && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
