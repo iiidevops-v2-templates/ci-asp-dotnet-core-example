@@ -20,6 +20,7 @@ namespace ASP_MVC_example.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Index action was called.");
             return View();
         }
 
