@@ -15,6 +15,7 @@ Test--SonarQube source code scan:
     CHART_ASP_TAG: '6.0'
   only:
   - master
+  - develop
 Test--Anchore SBOM source code scan:
   variables:
     iiidevops: anchore-code
