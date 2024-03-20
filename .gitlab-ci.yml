@@ -20,7 +20,7 @@ Test--Anchore SBOM source code scan:
   variables:
     iiidevops: anchore-code
   only:
-  - skip
+  - develop
 Test--Checkmarx source code scan:
   variables:
     iiidevops: checkmarx
