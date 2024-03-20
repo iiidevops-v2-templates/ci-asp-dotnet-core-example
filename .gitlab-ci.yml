@@ -25,23 +25,23 @@ Test--Checkmarx source code scan:
   variables:
     iiidevops: checkmarx
   only:
-  - skip
+  - develop
 Build image:
   variables:
     iiidevops: deployed-environments
     DOCKERFILE_PATH: Dockerfile
   only:
-  - skip
+  - develop
 Build--Scan docker image:
   variables:
     iiidevops: deployed-environments
   only:
-  - skip
+  - develop
 Deploy--Set environment and wait deployment:
   variables:
     iiidevops: deployed-environments
   only:
-  - skip
+  - develop
 Deploy--Web:
   variables:
     iiidevops: deployed-environments
@@ -50,12 +50,12 @@ Deploy--Web:
     CHART_VOLUME_ENABLED: 'false'
     CHART_VOLUME_PATH: /usr/src
   only:
-  - skip
+  - develop
 Test--Anchore SBOM:
   variables:
     iiidevops: anchore
   only:
-  - skip
+  - develop
 Test--ZAP:
   variables:
     iiidevops: zap
