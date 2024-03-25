@@ -2,12 +2,14 @@ include:
 - project: iiidevops-templates/ci-template
   ref: v2.5.5
   file: ci/template.gitlab-ci.yml
+- local: iiidevops/jobs/*.yml
 stages:
 - initial
 - scan
 - build
 - deploy
 - test
+- jobs
 Test--SonarQube source code scan:
   variables:
     iiidevops: sonarqube
@@ -16,6 +18,7 @@ Test--SonarQube source code scan:
   only:
   - master
   - develop
+  - newci
 Test--Anchore SBOM source code scan:
   variables:
     iiidevops: anchore-code
