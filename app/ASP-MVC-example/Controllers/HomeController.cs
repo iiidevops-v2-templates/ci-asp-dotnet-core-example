@@ -1,11 +1,6 @@
 ﻿using ASP_MVC_example.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ASP_MVC_example.Controllers
 {
@@ -20,7 +15,6 @@ namespace ASP_MVC_example.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation("Index action was called.");
             return View();
         }
 

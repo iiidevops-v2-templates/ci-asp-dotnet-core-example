@@ -2,13 +2,14 @@
 
 ## 注意事項
 * `sln`檔案為Sonarqube掃描必須檔案，若僅部屬服務不一定需要此sln檔案，僅原始碼+Dockerfile即可
+* 此範本中示範，專案已內含Dockerfile，上傳後之設定步驟，如專案內無Dockerfile，請參考https://xxxxxx
 * `ASP.NET 8.0 Container中，Web核心埠從 80 變更為 8080，使用此版本務必留意各設定需進行調整
 * 掃描後仍需檢查確認送至Sonarqube UI的檔案是否相符
 * 專案內的`.csproj`檔內有此專案的版本定義
 * 舊版本已不再支援，詳情請見 底下 [End of Support Notification](#my-anchor) 連結說明 
-
+ 
 ## 流程說明
-![](https://i.imgur.com/PgZlb1S.png)
+![](https://i.imgur.com/toASHDl.png)
 
 ## 建立專案
 * 放程式碼進去
@@ -16,6 +17,10 @@
 請將全部的程式碼包含.sln檔 放進 `app`資料夾內
 
 ![](https://i.imgur.com/gJtcs4m.png)
+
+## 開啟專案內的`.csproj`，確認版本(已知版本者可略過此步驟)
+- 示範的版本是NETCoreApp 6.0，請確認版本後，進行下一步驟
+![](https://i.imgur.com/MzzFAtm.png)
 
 ## 修改.gitlab-ci.yml檔案
 - 範本預設的是NETCoreApp 6.0，如果開發者使用的版本比較新，如8.0，請依以下指示進行修改:
@@ -35,43 +40,18 @@ Test--SonarQube source code scan:
   only:
     - master
 ```
+## 修改.gitlab-ci.yml檔案中之設定
+- 依實際Dockerfile檔案路徑，更新設定內容
+- 修改位置及修改後示意如下圖
+
+![](https://i.imgur.com/U1FpHV3.png)
+
 ## 修改iiidevops/sonarqube/SonarScan
 - 依實際sln名稱及路徑，更新設定內容
 - 修改後示意如下圖︰
 
 ![](https://i.imgur.com/DjEQaIc.png)
 
-## 修改dockerfile
-- 當dotnet版本不同時，建議可一併修改dockerfile，以利正確生成實證環境
-- 修改後示意如下圖：
-
-![](https://i.imgur.com/emjEMWD.png)
-
-- 文字範本如下︰
-```
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src/app
-COPY ["app/ASP-MVC-example.csproj", "app/"]
-RUN dotnet restore "app/ASP-MVC-example.csproj"
-COPY app /src/app
-RUN ls
-WORKDIR "/src/app"
-RUN ls
-RUN dotnet build "ASP-MVC-example.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "ASP-MVC-example.csproj" -c Release -o /app/publish
-
-FROM base AS final
-WORKDIR /app
-ENV TZ="Asia/Taipei"
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ASP-MVC-example.dll"]
-```
 
 ## ASP.NET 8.0 調整gitlab-ci.yml中CHART_WEB_PORT設定
 - 因aspnet-port之變更，使用8.0應一併調整gitlab-ci.yml之CHART_WEB_PORT，由80調整為8080
@@ -100,7 +80,6 @@ ENTRYPOINT ["dotnet", "ASP-MVC-example.dll"]
 * 專案內`.gitlab-ci.yml`請勿更動，產品系統設計上不支援pipeline修改，但若預設`README.md`文件內有寫引導說明部分則例外。
 * `iiidevops`資料夾內`pipeline_settings.json`請勿更動。
 * `postman`資料夾內則是您在devops管理網頁上的Postman-collection(newman)自動測試檔案，devops系統會以`postman`資料夾內檔案做自動測試。
-* `Dockerfile`內可能會看到很多來源都加上前墜`dockerhub`，此為必須需求，為使image能從iiidevops產品所架設的`harbor`上作為來源擷取出Docker Hub的image來源。
 * 若使用上有任何問題請至`https://www.iiidevops.org/`內的`聯絡方式`頁面做問題回報。
 
 ## Reference and FAQ
