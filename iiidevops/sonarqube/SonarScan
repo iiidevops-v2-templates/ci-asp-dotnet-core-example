@@ -1,17 +1,48 @@
-echo '========== SonarQube(ASP.NET) =========='
-cd app && echo 'Install scan package' && apt-get update && apt install -y locales default-jre nodejs && dotnet tool install --global dotnet-sonarscanner
-echo 'Add dotnet tools into PATH' && export PATH="$PATH:/root/.dotnet/tools"
+echo '========== Config Settings =========='
+# 下面範例為範本專案名，請改成您現在專案的名字，預設執行位置在 /usr/src/app 下，所以也可寫成相對路徑
+pwd
+export PROJECT_PATH="${CI_PROJECT_DIR}/app/ASP-MVC-example/ASP-MVC-example.sln"
+export TEST_PROJECT="${CI_PROJECT_DIR}/app/ASP-MVC-example.test/ASP-MVC-example.test.csproj"
+export TEST_EXCLUSION="${CI_PROJECT_DIR}/iiidevops/**,${CI_PROJECT_DIR}/docs/**"
 
-# install open-jdk-17
+echo '========== SonarQube(ASP.NET) =========='
+cd app && echo 'Install scan package' && apt-get update && apt install -y locales default-jre nodejs
+
+echo '========== Install DotNET Tool =========='
+dotnet tool install --global dotnet-sonarscanner 
+dotnet tool install --global dotnet-reportgenerator-globaltool
+export PATH="$PATH:/root/.dotnet/tools"
+
+echo '========== Upgrade to OpenJDK 17 =========='
  apt-get update
  apt-get install -y openjdk-17-jdk
 
+echo '========== Upgrade Node to version 20 =========='
+apt-get install -y ca-certificates curl gnupg
+mkdir -p /etc/apt/keyrings/
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+NODE_MAJOR=20
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+apt-get update && apt-get install nodejs -y
 
 locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
+
+#echo '========== START Executing SonarQube =========='
+#dotnet-sonarscanner\
+#    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
+#    /d:sonar.host.url=$SONAR_HOST_URL\
+#	&& dotnet build $PROJECT_PATH  \
+#    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+
+#echo '========== START Executing SonarQube (with UNIT TEST)=========='
 dotnet-sonarscanner\
     begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
-    /d:sonar.host.url=$SONAR_HOST_URL\
-    /d:sonar.exclusions=../iiidevops/**,../docs/**\
-	&& dotnet build ../app/ASP-MVC-example.sln && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+    /d:sonar.exclusions=$TEST_EXCLUSION\
+    /d:sonar.coverageReportPaths="coverage/SonarQube.xml" /d:sonar.host.url=$SONAR_HOST_URL\
+	 && dotnet build $PROJECT_PATH  \
+    && dotnet test $TEST_PROJECT \
+         --collect:"XPlat Code Coverage" --results-directory ./coverage \
+    && reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube" \
+    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN

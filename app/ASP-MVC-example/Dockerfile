@@ -10,11 +10,11 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
 # 只複製項目文件以利用層緩存
-COPY app/ASP-MVC-example.csproj .
+COPY app/ASP-MVC-example/ASP-MVC-example.csproj .
 RUN dotnet restore "ASP-MVC-example.csproj"
 
 # 複製整個應用程序並構建它
-COPY app/ .
+COPY app/ASP-MVC-example .
 RUN dotnet build "ASP-MVC-example.csproj" -c Release -o /app/build
 
 # 創建發佈的目標
