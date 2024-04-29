@@ -1,8 +1,9 @@
 echo '========== Config Settings =========='
 # 下面範例為範本專案名，請改成您現在專案的名字，預設執行位置在 /usr/src/app 下，所以也可寫成相對路徑
-export PROJECT_PATH="../app/ASP-MVC-example.sln"
-export TEST_PROJECT='/usr/src/app/ASP-MVC-example.Tests/ASP-MVC-example.Tests.csproj'
-export TEST_EXCLUSION='../iiidevops/**,../docs/**'
+pwd
+export PROJECT_PATH="${CI_PROJECT_DIR}/app/ASP-MVC-example/ASP-MVC-example.sln"
+export TEST_PROJECT="${CI_PROJECT_DIR}/app/ASP-MVC-example.test/ASP-MVC-example.test.csproj"
+export TEST_EXCLUSION="${CI_PROJECT_DIR}/iiidevops/**,${CI_PROJECT_DIR}/docs/**"
 
 echo '========== SonarQube(ASP.NET) =========='
 cd app && echo 'Install scan package' && apt-get update && apt install -y locales default-jre nodejs
@@ -29,19 +30,19 @@ update-locale LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
 #echo '========== START Executing SonarQube =========='
-dotnet-sonarscanner\
-    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
-    /d:sonar.host.url=$SONAR_HOST_URL\
-	&& dotnet build $PROJECT_PATH  \
-    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
-
-#echo '========== START Executing SonarQube (with UNIT TEST)=========='
 #dotnet-sonarscanner\
 #    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
-#    /d:sonar.exclusions=$TEST_EXCLUSION\
-#    /d:sonar.coverageReportPaths="coverage/SonarQube.xml" /d:sonar.host.url=$SONAR_HOST_URL\
-#	 && dotnet build $PROJECT_PATH  \
-#    && dotnet test $TEST_PROJECT \
-#         --collect:"XPlat Code Coverage" --results-directory ./coverage \
-#    && reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube" \
+#    /d:sonar.host.url=$SONAR_HOST_URL\
+#	&& dotnet build $PROJECT_PATH  \
 #    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+
+#echo '========== START Executing SonarQube (with UNIT TEST)=========='
+dotnet-sonarscanner\
+    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
+    /d:sonar.exclusions=$TEST_EXCLUSION\
+    /d:sonar.coverageReportPaths="coverage/SonarQube.xml" /d:sonar.host.url=$SONAR_HOST_URL\
+	 && dotnet build $PROJECT_PATH  \
+    && dotnet test $TEST_PROJECT \
+         --collect:"XPlat Code Coverage" --results-directory ./coverage \
+    && reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube" \
+    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
