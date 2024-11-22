@@ -10,7 +10,8 @@ cd app && echo 'Install scan package' && apt-get update && apt install -y locale
 
 echo '========== Install DotNET Tool =========='
 dotnet tool install --global dotnet-sonarscanner 
-dotnet tool install --global dotnet-reportgenerator-globaltool
+dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.8.12
+
 export PATH="$PATH:/root/.dotnet/tools"
 
 echo '========== Upgrade to OpenJDK 17 =========='
