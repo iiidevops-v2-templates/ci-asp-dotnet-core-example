@@ -16,7 +16,7 @@ Test--SonarQube source code scan:
   variables:
     iiidevops: sonarqube
     CHART_TYPE: asp_dot_net
-    CHART_ASP_TAG: '6.0'
+    CHART_ASP_TAG: '8.0'
 
 Test--Semgrep SAST code scan:
   variables:
@@ -52,7 +52,7 @@ Deploy--Set environment and wait deployment:
 Deploy--Web:
   variables:
     iiidevops: deploy
-    CHART_WEB_PORT: 80
+    CHART_WEB_PORT: 8080
     CHART_PROXY_BODY_SIZE: 1m
     CHART_VOLUME_ENABLED: 'false'
     CHART_VOLUME_PATH: /usr/src
@@ -64,7 +64,7 @@ Test--Anchore SBOM:
 Test--ZAP:
   variables:
     iiidevops: zap
-    CHART_WEB_PORT: 80
+    CHART_WEB_PORT: 8080
 
 Test--WebInspect:
   variables:
@@ -73,10 +73,10 @@ Test--WebInspect:
 Test--Postman:
   variables:
     iiidevops: postman
-    CHART_WEB_PORT: 80
+    CHART_WEB_PORT: 8080
 
 Test--Sideex:
   variables:
     iiidevops: sideex
-    CHART_WEB_PORT: 80
+    CHART_WEB_PORT: 8080
 
