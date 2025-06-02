@@ -1,12 +1,9 @@
 # ASP.NET MVC Web Example
 
 ## 注意事項
-* `sln`檔案為Sonarqube掃描必須檔案，若僅部屬服務不一定需要此sln檔案，僅原始碼+Dockerfile即可
-* 此範本中示範，專案已內含Dockerfile，上傳後之設定步驟，如專案內無Dockerfile，請參考https://xxxxxx
+* `sln`檔案為Sonarqube掃描必須檔案，若僅部署服務不一定需要此sln檔案，僅原始碼+Dockerfile即可
 * `ASP.NET 8.0 Container中，Web核心埠從 80 變更為 8080，使用此版本務必留意各設定需進行調整
-* 掃描後仍需檢查確認送至Sonarqube UI的檔案是否相符
 * 專案內的`.csproj`檔內有此專案的版本定義
-* 舊版本已不再支援，詳情請見 底下 [End of Support Notification](#my-anchor) 連結說明 
  
 ## 流程說明
 ![](https://i.imgur.com/toASHDl.png)
@@ -19,18 +16,27 @@
 ![](https://i.imgur.com/gJtcs4m.png)
 
 ## 開啟專案內的`.csproj`，確認版本(已知版本者可略過此步驟)
-- 示範的版本是NETCoreApp 6.0，請確認版本後，進行下一步驟
-![](https://i.imgur.com/MzzFAtm.png)
+- 示範的版本是NETCoreApp 8.0，請確認版本後，進行下一步驟
+```
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ASP_MVC_example</RootNamespace>
+  </PropertyGroup>
+
+</Project>
+```
 
 ## 修改.gitlab-ci.yml檔案
-- 範本預設的是NETCoreApp 6.0，如果開發者使用的版本比較新，如8.0，請依以下指示進行修改:
+- 範本預設的是NETCoreApp 8.0，如果開發者使用的版本不同，請依以下指示進行修改:
 
-### 修改範本(修改後)
-如果開發環境比NETCoreApp 6.0版本更新，請根據實際的版本進行修改`CHART_ASP_TAG`。
-- 修改後示意如下圖：
+### 版本設定說明
+本範本預設為NETCoreApp 8.0，如使用不同版本請修改`CHART_ASP_TAG`和相關設定。
 
-![](https://i.imgur.com/Odxg6c2.png)
-- 文字範本如下： 
+**ASP.NET 8.0 (預設)範本：**
 ```
 Test--SonarQube source code scan:
   variables:
@@ -40,6 +46,10 @@ Test--SonarQube source code scan:
   only:
     - master
 ```
+
+**若使用ASP.NET 6.0或更早版本，需額外修改：**
+1. 將 `CHART_ASP_TAG` 改為 `"6.0"` (或對應版本)
+2. 將 `CHART_WEB_PORT` 從 `8080` 改為 `80`
 ## 修改.gitlab-ci.yml檔案中之設定
 - 依實際Dockerfile檔案路徑，更新設定內容
 - 修改位置及修改後示意如下圖
@@ -53,12 +63,11 @@ Test--SonarQube source code scan:
 ![](https://i.imgur.com/DjEQaIc.png)
 
 
-## ASP.NET 8.0 調整gitlab-ci.yml中CHART_WEB_PORT設定
-- 因aspnet-port之變更，使用8.0應一併調整gitlab-ci.yml之CHART_WEB_PORT，由80調整為8080
-- 修改後示意如下圖︰
-
-![](https://i.imgur.com/JAXSuEO.png)
-
+## ASP.NET 8.0 預設調整說明
+- 本範本預設使用ASP.NET 8.0，已將gitlab-ci.yml中CHART_WEB_PORT調整為8080 (因ASP.NET 8.0 Container埠變更)
+- 若使用其他版本(如6.0或更早版本)，需進行以下調整：
+  1. 將`CHART_ASP_TAG`改為對應版本 (如`"6.0"`)
+  2. 將`CHART_WEB_PORT`從`8080`改回`80`
 
 
 ## 專案資料夾與檔案格式說明
@@ -71,13 +80,13 @@ Test--SonarQube source code scan:
 | 檔案 | .gitlab-ci.yml | :warning: (不可更動)devops系統測試所需檔案 | 在根目錄 |
 | 檔案 | pipeline_settings.json | :warning: (不可更動)devops系統測試所需檔案 | 在iiidevops資料夾內 |
 | 檔案 | app.env | (可調整)實證環境 `web`環境變數添加 | 在iiidevops資料夾內 | 
-| 檔案 | postman_collection.json | (可調整)devops newman部屬測試案例檔案 | iiidevops/postman資料夾內 |
-| 檔案 | postman_environment.json | (可調整)devops newman部屬測試環境變數檔案 | iiidevops/postman資料夾內 |
-| 檔案 | sideex.json | (可調整)devops Sideex部屬測試檔案 | iiidevops/sideex資料夾內 |
-| 檔案 | Dockerfile | (可調整)devops k8s環境部屬檔案 | 根目錄 |
+| 檔案 | SonarScan | (可調整)devops sonarqube 掃描執行檔案 | iiidevops/sonarqube資料夾內 |
+| 檔案 | postman_collection.json | (可調整)devops newman部署測試案例檔案 | iiidevops/postman資料夾內 |
+| 檔案 | postman_environment.json | (可調整)devops newman部署測試環境變數檔案 | iiidevops/postman資料夾內 |
+| 檔案 | Dockerfile | (可調整)devops k8s環境部署檔案 |  |
 
 ## iiidevops
-* 專案內`.gitlab-ci.yml`請勿更動，產品系統設計上不支援pipeline修改，但若預設`README.md`文件內有寫引導說明部分則例外。
+* 專案內`.gitlab-ci.yml`如需要更動，請務必注意，避免影響現有的功能。
 * `iiidevops`資料夾內`pipeline_settings.json`請勿更動。
 * `postman`資料夾內則是您在devops管理網頁上的Postman-collection(newman)自動測試檔案，devops系統會以`postman`資料夾內檔案做自動測試。
 * 若使用上有任何問題請至`https://www.iiidevops.org/`內的`聯絡方式`頁面做問題回報。
