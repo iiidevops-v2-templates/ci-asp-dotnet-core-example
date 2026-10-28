@@ -32,18 +32,18 @@ export LANG="en_US.UTF-8"
 
 #echo '========== START Executing SonarQube =========='
 #dotnet-sonarscanner\
-#    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
+#    begin /d:sonar.token=$SONAR_TOKEN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
 #    /d:sonar.host.url=$SONAR_HOST_URL\
 #	&& dotnet build $PROJECT_PATH  \
-#    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+#    && dotnet-sonarscanner end /d:sonar.token=$SONAR_TOKEN
 
 #echo '========== START Executing SonarQube (with UNIT TEST)=========='
 dotnet-sonarscanner\
-    begin /d:sonar.login=$SONAR_LOGIN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
+    begin /d:sonar.token=$SONAR_TOKEN /k:$PROJECT_NAME /n:$PROJECT_NAME /v:$GIT_BRANCH:$GIT_COMMIT_ID\
     /d:sonar.exclusions=$TEST_EXCLUSION\
     /d:sonar.coverageReportPaths="coverage/SonarQube.xml" /d:sonar.host.url=$SONAR_HOST_URL\
 	 && dotnet build $PROJECT_PATH  \
     && dotnet test $TEST_PROJECT \
          --collect:"XPlat Code Coverage" --results-directory ./coverage \
     && reportgenerator "-reports:./coverage/*/coverage.cobertura.xml" "-targetdir:coverage" "-reporttypes:SonarQube" \
-    && dotnet-sonarscanner end /d:sonar.login=$SONAR_LOGIN
+    && dotnet-sonarscanner end /d:sonar.token=$SONAR_TOKEN
